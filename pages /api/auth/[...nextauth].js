@@ -18,6 +18,5 @@ export default NextAuth({
     })
   ],
   session: {
-    // Add your session configuration here
   }
 });
