@@ -3,15 +3,30 @@ import Providers from 'next-auth/providers';
 
 // Simulated API function that returns a promise representing an API request
 const mockAPIRequest = async (credentials) => {
-  // Simulating an API request with credentials
-  // Replace this with your actual API request logic
-  // For the sake of example, let's pretend this API expects a username and password
-  if (credentials.username === 'admin' && credentials.password === 'password') {
-    // Return a successful response
-    return Promise.resolve({ status: 200, user: { id: 1, name: 'admin', email: 'admin@example.com' } });
-  } else {
-    // Return an unauthorized error (simulated 401 error)
-    return Promise.reject({ status: 401, message: 'Unauthorized' });
+  const apiUrl = 'https://api.rental.movie.io.github.com/data'; // Replace with your actual API endpoint URL
+
+  try {
+    const response = await fetch(apiUrl, {
+      method: 'POST', // Example: Change the HTTP method as needed
+      headers: {
+        'Content-Type': 'application/json',
+        // Include any authorization headers or tokens here if required
+        'Authorization': `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` // Replace with your actual token
+      },
+      body: JSON.stringify(credentials) // Example: Sending credentials as JSON in the request body
+      // Adjust the body as needed based on your API endpoint's requirements
+    });
+
+    if (response.ok) {
+      // Return the response data if request is successful
+      return Promise.resolve({ status: response.status, data: await response.json() });
+    } else {
+      // Return the error status and message
+      return Promise.reject({ status: response.status, message: 'Failed to fetch data' });
+    }
+  } catch (error) {
+    // Handle any fetch errors
+    return Promise.reject(error);
   }
 };
 
@@ -30,7 +45,7 @@ export default NextAuth({
           // Check the response status
           if (response.status === 200) {
             // Return user details if authorized
-            return Promise.resolve(response.user);
+            return Promise.resolve(response.data);
           } else {
             // Handle other error statuses here if needed
             return Promise.reject(new Error('Failed to authenticate'));
