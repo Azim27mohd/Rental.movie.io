@@ -5,7 +5,7 @@ import Providers from 'next-auth/providers';
 export default NextAuth({
   providers: [
     Providers.Credentials({
-      // Add your authentication logic here
+      // Add authentication logic here
       credentials: {
         username: { label: "Username", type: "text" },
         password: {  label: "Password",  type: "password" }
@@ -18,5 +18,6 @@ export default NextAuth({
     })
   ],
   session: {
+    // Add session configuration here
   }
 });
